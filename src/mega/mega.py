@@ -1,4 +1,5 @@
 import math
+import humanize
 import re
 import json
 import logging
@@ -26,6 +27,18 @@ from .crypto import (a32_to_base64, encrypt_key, base64_url_encode,
 
 logger = logging.getLogger(__name__)
 
+# Convert Bytes into Readable Format
+# Ref - https://github.com/SpEcHiDe/AnyDLBot
+# def readablesize(size):
+#     if not size:
+#         return ""
+#     power = 2**10
+#     n = 0
+#     Dic_powerN = {0: ' ', 1: 'Ki', 2: 'Mi', 3: 'Gi', 4: 'Ti'}
+#     while size > power:
+#         size /= power
+#         n += 1
+#         return str(round(size, 2)) + " " + Dic_powerN[n] + 'B'
 
 class Mega:
     def __init__(self, options=None):
@@ -630,7 +643,7 @@ class Mega:
         nodes = self.get_files()
         return self.get_folder_link(nodes[node_id])
 
-    def download_url(self, url, dest_path=None, dest_filename=None):
+    def download_url(self, url, dest_path=None, dest_filename=None, statusdl_msg=None):
         """
         Download a file by it's public url
         """
@@ -642,6 +655,7 @@ class Mega:
             file_key=file_key,
             dest_path=dest_path,
             dest_filename=dest_filename,
+            statusdl_msg=statusdl_msg,
             is_public=True,
         )
 
@@ -650,6 +664,7 @@ class Mega:
                        file_key,
                        dest_path=None,
                        dest_filename=None,
+                       statusdl_msg=None,
                        is_public=False,
                        file=None):
         if file is None:
@@ -698,6 +713,13 @@ class Mega:
             dest_path = ''
         else:
             dest_path += '/'
+        
+        # Download Status message of Pyrogram Bot
+        if statusdl_msg is not None:
+            dlstats_msg = statusdl_msg
+        else:
+            print("Can't Get Download Status Message")
+            return
 
         with tempfile.NamedTemporaryFile(mode='w+b',
                                          prefix='megapy_',
@@ -734,6 +756,8 @@ class Mega:
                 mac_str = mac_encryptor.encrypt(encryptor.encrypt(block))
 
                 file_info = os.stat(temp_output_file.name)
+                # Edit status message
+                dlstats_msg.edit(f"**Starting to Download The Content! This may take while 😴** \n\n**Total File Size:** `{humanize.naturalsize(file_size)}` \n**Downloaded:** `{humanize.naturalsize(file_info.st_size)}`")
                 logger.info('%s of %s downloaded', file_info.st_size,
                             file_size)
             file_mac = str_to_a32(mac_str)
