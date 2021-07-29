@@ -27,19 +27,6 @@ from .crypto import (a32_to_base64, encrypt_key, base64_url_encode,
 
 logger = logging.getLogger(__name__)
 
-# Convert Bytes into Readable Format
-# Ref - https://github.com/SpEcHiDe/AnyDLBot
-# def readablesize(size):
-#     if not size:
-#         return ""
-#     power = 2**10
-#     n = 0
-#     Dic_powerN = {0: ' ', 1: 'Ki', 2: 'Mi', 3: 'Gi', 4: 'Ti'}
-#     while size > power:
-#         size /= power
-#         n += 1
-#         return str(round(size, 2)) + " " + Dic_powerN[n] + 'B'
-
 class Mega:
     def __init__(self, options=None):
         self.schema = 'https'
