@@ -733,10 +733,10 @@ class Mega:
                     encryptor.encrypt(block)
 
                 # fix for files under 16 bytes failing
-                if file_size > 16:
-                    i += 16
-                else:
-                    i = 0
+                    if file_size > 16:
+                        i += 16
+                    else:
+                        i = 0
 
                 block = chunk[i:i + 16]
                 if len(block) % 16:
