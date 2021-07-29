@@ -721,7 +721,7 @@ class Mega:
             mac_encryptor = AES.new(k_str, AES.MODE_CBC,
                                     mac_str.encode("utf8"))
             iv_str = a32_to_str([iv[0], iv[1], iv[0], iv[1]])
-
+            i = 0
             for chunk_start, chunk_size in get_chunks(file_size):
                 chunk = input_file.read(chunk_size)
                 chunk = aes.decrypt(chunk)
@@ -733,10 +733,10 @@ class Mega:
                     encryptor.encrypt(block)
 
                 # fix for files under 16 bytes failing
-                    if file_size > 16:
-                        i += 16
-                    else:
-                        i = 0
+                if file_size > 16:
+                    i += 16
+                else:
+                    i = 0
 
                 block = chunk[i:i + 16]
                 if len(block) % 16:
