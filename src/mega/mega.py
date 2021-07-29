@@ -704,7 +704,7 @@ class Mega:
         
         # Download Status message of Pyrogram Bot
         if progress_msg_for_mega is not None:
-            dlstats_msg = progress_msg_for_mega
+            tgmsg_to_modify = progress_msg_for_mega
         else:
             print("Can't Get Download Status Message")
             return
@@ -745,7 +745,7 @@ class Mega:
 
                 file_info = os.stat(temp_output_file.name)
                 # Edit status message
-                dlstats_msg.edit(f"**𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱𝗶𝗻𝗴 𝗜𝗻𝘁𝗼 𝗠𝘆 𝗦𝗲𝗿𝘃𝗲𝗿 𝗡𝗼𝘄 📥**\n\n**Files Detected :** `{file_name}`  \n**Total Size :** `{humanize.naturalsize(file_size)}` \n**Downloaded ✅ :** `{humanize.naturalsize(file_info.st_size)}` of `{humanize.naturalsize(file_size)}` \n\n__Downloading can take some time depending on your link size and on the current task amount that I am running at once. 😬__")
+                tgmsg_to_modify.edit(f"**𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱𝗶𝗻𝗴 𝗜𝗻𝘁𝗼 𝗠𝘆 𝗦𝗲𝗿𝘃𝗲𝗿 𝗡𝗼𝘄 📥**\n\n**Files Detected :** `{file_name}`  \n**Total Size :** `{humanize.naturalsize(file_size)}` \n**Downloaded ✅ :** `{humanize.naturalsize(file_info.st_size)}` of `{humanize.naturalsize(file_size)}` \n\n__Downloading can take some time depending on your link size and on the current task amount that I am running at once. 😬__")
                 logger.info('%s of %s downloaded', file_info.st_size,
                             file_size)
             file_mac = str_to_a32(mac_str)
