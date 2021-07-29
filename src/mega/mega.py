@@ -706,7 +706,7 @@ class Mega:
         if progress_msg_for_mega is not None:
             tgmsg_to_modify = progress_msg_for_mega
         else:
-            print("Can't Get Download Status Message")
+            logger.info("I think some error has been occured!")
             return
 
         with tempfile.NamedTemporaryFile(mode='w+b',
