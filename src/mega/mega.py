@@ -49,7 +49,8 @@ class Mega:
         self._trash_folder_node_id = self.get_node_by_type(4)[0]
         logger.info('Login complete')
         return self
-
+      
+      
     def _login_user(self, email, password):
         logger.info('Logging in user...')
         email = email.lower()
