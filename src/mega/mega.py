@@ -631,7 +631,7 @@ class Mega:
         nodes = self.get_files()
         return self.get_folder_link(nodes[node_id])
 
-    def download_url(self, url, dest_path=None, dest_filename=None, statusdl_msg=None):
+    def download_url(self, url, dest_path=None, dest_filename=None, progress_msg_for_mega=None):
         """
         Download a file by it's public url
         """
@@ -643,7 +643,7 @@ class Mega:
             file_key=file_key,
             dest_path=dest_path,
             dest_filename=dest_filename,
-            statusdl_msg=statusdl_msg,
+            progress_msg_for_mega=progress_msg_for_mega,
             is_public=True,
         )
 
@@ -652,7 +652,7 @@ class Mega:
                        file_key,
                        dest_path=None,
                        dest_filename=None,
-                       statusdl_msg=None,
+                       progress_msg_for_mega=None,
                        is_public=False,
                        file=None):
         if file is None:
@@ -703,8 +703,8 @@ class Mega:
             dest_path += '/'
         
         # Download Status message of Pyrogram Bot
-        if statusdl_msg is not None:
-            dlstats_msg = statusdl_msg
+        if progress_msg_for_mega is not None:
+            dlstats_msg = progress_msg_for_mega
         else:
             print("Can't Get Download Status Message")
             return
