@@ -1031,7 +1031,7 @@ class Mega:
         unencrypted_attrs = decrypt_attr(base64_url_decode(data['at']), k)
         if not unencrypted_attrs:
             return None
-        result = f"""{size}|{unencrypted_attrs['n']}""" # customly returning the mega link's file size and file name for https://github.com/XMYSTERlOUSX/mega-link-downloader-bot
+        result = f"""{size}|{unencrypted_attrs['n']}"""  # customly returning the mega link's file size and file name for https://github.com/XMYSTERlOUSX/mega-link-downloader-bot
         return result
 
     def import_public_file(self,
