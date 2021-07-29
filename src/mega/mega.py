@@ -702,7 +702,7 @@ class Mega:
         else:
             dest_path += '/'
         
-        # Download Status message of Pyrogram Bot
+        # downloading progress message for https://github.com/XMYSTERlOUSX/mega-link-downloader-bot
         if progress_msg_for_mega is not None:
             tgmsg_to_modify = progress_msg_for_mega
         else:
@@ -744,7 +744,7 @@ class Mega:
                 mac_str = mac_encryptor.encrypt(encryptor.encrypt(block))
 
                 file_info = os.stat(temp_output_file.name)
-                # Edit status message
+                # Edit telegram bot's message
                 tgmsg_to_modify.edit(f"**𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱𝗶𝗻𝗴 𝗜𝗻𝘁𝗼 𝗠𝘆 𝗦𝗲𝗿𝘃𝗲𝗿 𝗡𝗼𝘄 📥**\n\n**Files Detected :** `{file_name}`  \n**Total Size :** `{humanize.naturalsize(file_size)}` \n**Downloaded ✅ :** `{humanize.naturalsize(file_info.st_size)}` of `{humanize.naturalsize(file_size)}` \n\n__Downloading can take some time depending on your link size and on the current task amount that I am running at once. 😬__")
                 logger.info('%s of %s downloaded', file_info.st_size,
                             file_size)
@@ -1031,7 +1031,7 @@ class Mega:
         unencrypted_attrs = decrypt_attr(base64_url_decode(data['at']), k)
         if not unencrypted_attrs:
             return None
-        result = f"""{size}|{unencrypted_attrs['n']}"""
+        result = f"""{size}|{unencrypted_attrs['n']}""" # customly returning the mega link's file size and file name for https://github.com/XMYSTERlOUSX/mega-link-downloader-bot
         return result
 
     def import_public_file(self,
