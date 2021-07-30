@@ -16,7 +16,8 @@ import random
 import binascii
 import tempfile
 import shutil
-
+import pyrogram
+from pyrogram.errors import FloodWait, MessageNotModified
 import requests
 from tenacity import retry, wait_exponential, retry_if_exception_type
 
@@ -633,7 +634,7 @@ class Mega:
         nodes = self.get_files()
         return self.get_folder_link(nodes[node_id])
 
-    async def download_url(self, url, dest_path=None, dest_filename=None, progress_msg_for_mega=None, process_start_time=None):
+    def download_url(self, url, dest_path=None, dest_filename=None, progress_msg_for_mega=None, process_start_time=None):
         """
         Download a file by it's public url
         """
@@ -650,7 +651,7 @@ class Mega:
             is_public=True,
         )
 
-    async def _download_file(self,
+    def _download_file(self,
                        file_handle,
                        file_key,
                        dest_path=None,
@@ -778,13 +779,21 @@ class Mega:
                 )
                 
                 text1 = f"""𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱𝗶𝗻𝗴 𝗜𝗻𝘁𝗼 𝗠𝘆 𝗦𝗲𝗿𝘃𝗲𝗿 𝗡𝗼𝘄 📥"""
-
-                await tgmsg_to_modify.edit(
-                    text="{}\n {}".format(
-                        text1,
-                        tmp
+                
+                try:
+                    tgmsg_to_modify.edit(
+                        text="{}\n {}".format(
+                            text1,
+                            tmp
+                        )
                     )
-                )
+                except MessageNotModified:
+                    pass
+                except FloodWait as e:
+                    asyncio.sleep(e.x))
+                except TypeError:
+                    pass
+
                 logger.info('%s of %s downloaded', file_info.st_size,
                             file_size)
             file_mac = str_to_a32(mac_str)
