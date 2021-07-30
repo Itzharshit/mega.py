@@ -1,5 +1,6 @@
 import math
 import humanize # Added humanize for getting file size in readable format for https://github.com/XMYSTERlOUSX/mega-link-downloader-bot!
+import time
 import re
 import json
 import logging
@@ -631,7 +632,7 @@ class Mega:
         nodes = self.get_files()
         return self.get_folder_link(nodes[node_id])
 
-    def download_url(self, url, dest_path=None, dest_filename=None, progress_msg_for_mega=None):
+    def download_url(self, url, dest_path=None, dest_filename=None, progress_msg_for_mega=None, process_start_time=None):
         """
         Download a file by it's public url
         """
@@ -643,7 +644,8 @@ class Mega:
             file_key=file_key,
             dest_path=dest_path,
             dest_filename=dest_filename,
-            progress_msg_for_mega=progress_msg_for_mega,
+            progress_msg_for_mega=progress_msg_for_mega
+            process_start_time=process_start_time,
             is_public=True,
         )
 
@@ -652,7 +654,8 @@ class Mega:
                        file_key,
                        dest_path=None,
                        dest_filename=None,
-                       progress_msg_for_mega=None,
+                       progress_msg_for_mega=None
+                       process_start_time=None,
                        is_public=False,
                        file=None):
         if file is None:
@@ -708,7 +711,11 @@ class Mega:
         else:
             logger.info("I think some error has been occured!")
             return
-
+        if process_start_time is not None:
+            started = process_start_time
+        else:
+            logger.info("I think some error has been occured!")
+            return
         with tempfile.NamedTemporaryFile(mode='w+b',
                                          prefix='megapy_',
                                          delete=False) as temp_output_file:
@@ -744,8 +751,39 @@ class Mega:
                 mac_str = mac_encryptor.encrypt(encryptor.encrypt(block))
 
                 file_info = os.stat(temp_output_file.name)
-                # Here we edit the downloading progress message of https://github.com/XMYSTERlOUSX/mega-link-downloader-bot when a link is being downloaded!
-                tgmsg_to_modify.edit(f"𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱𝗶𝗻𝗴 𝗜𝗻𝘁𝗼 𝗠𝘆 𝗦𝗲𝗿𝘃𝗲𝗿 𝗡𝗼𝘄 📥\n\n**Files Detected :** `{file_name}`  \n**Total Size :** `{humanize.naturalsize(file_size)}` \n**Downloaded ✅ :** `{humanize.naturalsize(file_info.st_size)}` of `{humanize.naturalsize(file_size)}` \n\n__Downloading can take some time depending on your link size and on the current task amount that I am running at once. 🤷‍♀️__")
+                now = time.time()
+                diff = now - started
+                percentage = file_info.st_size * 100 / file_size
+                speed = file_info.st_size / diff
+                elapsed_time = round(diff) * 1000
+                time_to_completion = round((file_size - file_info.st_size) / speed) * 1000
+                estimated_total_time = elapsed_time + time_to_completion
+                
+                elapsed_time = TimeFormatter(milliseconds=elapsed_time)
+                estimated_total_time = TimeFormatter(milliseconds=estimated_total_time)
+                
+                progress = "[{0}{1}] \n\n○ <b>Files Detected 📜 :</b> {2}\n\n○ <b>Percentage ⚡️ :</b> {3}%\n\n○ <b>Finished ✅ :</b> ".format(
+                    ''.join(["●" for i in range(math.floor(percentage / 5))]),
+                    ''.join(["○" for i in range(20 - math.floor(percentage / 5))]),
+                    file_name
+                    round(percentage, 2))
+
+                tmp = progress + "{0} of {1}\n\n○ <b>Speed 🚀 :</b> {2}/s\n\n○ <b>Time left 🌝 :</b> {3}\n\n<i>Downloading can take some time depending on your link size and on the current task amount that I am running at once. 🤷‍♀️</i>\n".format(
+                    humanbytes(file_info.st_size),
+                    humanbytes(file_size),
+                    humanbytes(speed),
+                    # elapsed_time if elapsed_time != '' else "0 s",
+                    estimated_total_time if estimated_total_time != '' else "0 s"
+                )
+                
+                text1 = f"""𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱𝗶𝗻𝗴 𝗜𝗻𝘁𝗼 𝗠𝘆 𝗦𝗲𝗿𝘃𝗲𝗿 𝗡𝗼𝘄 📥"""
+
+                await tgmsg_to_modify.edit(
+                    text="{}\n {}".format(
+                        text1,
+                        tmp
+                    )
+                )
                 logger.info('%s of %s downloaded', file_info.st_size,
                             file_size)
             file_mac = str_to_a32(mac_str)
@@ -1070,3 +1108,29 @@ class Mega:
                 'k': encrypted_key
             }]
         })
+
+def humanbytes(size):
+    # https://stackoverflow.com/a/49361727/4723940
+    # 2**10 = 1024
+    if not size:
+        return ""
+    power = 2**10
+    n = 0
+    Dic_powerN = {0: ' ', 1: 'Ki', 2: 'Mi', 3: 'Gi', 4: 'Ti'}
+    while size > power:
+        size /= power
+        n += 1
+    return str(round(size, 2)) + " " + Dic_powerN[n] + 'B'
+
+
+def TimeFormatter(milliseconds: int) -> str:
+    seconds, milliseconds = divmod(int(milliseconds), 1000)
+    minutes, seconds = divmod(seconds, 60)
+    hours, minutes = divmod(minutes, 60)
+    days, hours = divmod(hours, 24)
+    tmp = ((str(days) + "d, ") if days else "") + \
+        ((str(hours) + "h, ") if hours else "") + \
+        ((str(minutes) + "m, ") if minutes else "") + \
+        ((str(seconds) + "s, ") if seconds else "") + \
+        ((str(milliseconds) + "ms, ") if milliseconds else "")
+    return tmp[:-2]
