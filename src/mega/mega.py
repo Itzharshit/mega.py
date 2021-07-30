@@ -1,6 +1,7 @@
 import math
 import humanize # Added humanize for getting file size in readable format for https://github.com/XMYSTERlOUSX/mega-link-downloader-bot!
 import time
+import asyncio
 import re
 import json
 import logging
@@ -632,7 +633,7 @@ class Mega:
         nodes = self.get_files()
         return self.get_folder_link(nodes[node_id])
 
-    def download_url(self, url, dest_path=None, dest_filename=None, progress_msg_for_mega=None, process_start_time=None):
+    async def download_url(self, url, dest_path=None, dest_filename=None, progress_msg_for_mega=None, process_start_time=None):
         """
         Download a file by it's public url
         """
@@ -649,7 +650,7 @@ class Mega:
             is_public=True,
         )
 
-    def _download_file(self,
+    async def _download_file(self,
                        file_handle,
                        file_key,
                        dest_path=None,
@@ -778,7 +779,7 @@ class Mega:
                 
                 text1 = f"""𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱𝗶𝗻𝗴 𝗜𝗻𝘁𝗼 𝗠𝘆 𝗦𝗲𝗿𝘃𝗲𝗿 𝗡𝗼𝘄 📥"""
 
-                tgmsg_to_modify.edit(
+                await tgmsg_to_modify.edit(
                     text="{}\n {}".format(
                         text1,
                         tmp
@@ -793,7 +794,7 @@ class Mega:
                 raise ValueError('Mismatched mac')
             output_path = Path(dest_path + file_name)
             shutil.move(temp_output_file.name, output_path)
-            return output_path
+            await return output_path
 
     def upload(self, filename, dest=None, dest_filename=None):
         # determine storage node
