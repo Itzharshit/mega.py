@@ -644,7 +644,7 @@ class Mega:
             file_key=file_key,
             dest_path=dest_path,
             dest_filename=dest_filename,
-            progress_msg_for_mega=progress_msg_for_mega
+            progress_msg_for_mega=progress_msg_for_mega,
             process_start_time=process_start_time,
             is_public=True,
         )
@@ -654,7 +654,7 @@ class Mega:
                        file_key,
                        dest_path=None,
                        dest_filename=None,
-                       progress_msg_for_mega=None
+                       progress_msg_for_mega=None,
                        process_start_time=None,
                        is_public=False,
                        file=None):
