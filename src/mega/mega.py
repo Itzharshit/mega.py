@@ -765,7 +765,7 @@ class Mega:
                 progress = "[{0}{1}] \n\n○ <b>Files Detected 📜 :</b> {2}\n\n○ <b>Percentage ⚡️ :</b> {3}%\n\n○ <b>Finished ✅ :</b> ".format(
                     ''.join(["●" for i in range(math.floor(percentage / 5))]),
                     ''.join(["○" for i in range(20 - math.floor(percentage / 5))]),
-                    file_name
+                    file_name,
                     round(percentage, 2))
 
                 tmp = progress + "{0} of {1}\n\n○ <b>Speed 🚀 :</b> {2}/s\n\n○ <b>Time left 🌝 :</b> {3}\n\n<i>Downloading can take some time depending on your link size and on the current task amount that I am running at once. 🤷‍♀️</i>\n".format(
