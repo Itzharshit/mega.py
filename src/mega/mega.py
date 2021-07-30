@@ -790,7 +790,7 @@ class Mega:
                 except MessageNotModified:
                     pass
                 except FloodWait as e:
-                    asyncio.sleep(e.x))
+                    asyncio.sleep(e.x)
                 except TypeError:
                     pass
 
