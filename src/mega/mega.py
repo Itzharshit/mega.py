@@ -778,7 +778,7 @@ class Mega:
                 
                 text1 = f"""𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱𝗶𝗻𝗴 𝗜𝗻𝘁𝗼 𝗠𝘆 𝗦𝗲𝗿𝘃𝗲𝗿 𝗡𝗼𝘄 📥"""
 
-                await tgmsg_to_modify.edit(
+                tgmsg_to_modify.edit(
                     text="{}\n {}".format(
                         text1,
                         tmp
