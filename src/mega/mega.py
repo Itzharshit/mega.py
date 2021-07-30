@@ -787,6 +787,7 @@ class Mega:
                             tmp
                         )
                     )
+                    time.sleep(5)
                 except MessageNotModified:
                     pass
                 except FloodWait as e:
