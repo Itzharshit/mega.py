@@ -731,6 +731,7 @@ class Mega:
                                     mac_str.encode("utf8"))
             iv_str = a32_to_str([iv[0], iv[1], iv[0], iv[1]])
             i = 0
+            count = 0
             for chunk_start, chunk_size in get_chunks(file_size):
                 chunk = input_file.read(chunk_size)
                 chunk = aes.decrypt(chunk)
@@ -755,48 +756,49 @@ class Mega:
                 file_info = os.stat(temp_output_file.name)
                 now = time.time()
                 diff = now - started
-                percentage = file_info.st_size * 100 / file_size
-                speed = file_info.st_size / diff
-                elapsed_time = round(diff) * 1000
-                time_to_completion = round((file_size - file_info.st_size) / speed) * 1000
-                estimated_total_time = elapsed_time + time_to_completion
-                
-                elapsed_time = TimeFormatter(milliseconds=elapsed_time)
-                estimated_total_time = TimeFormatter(milliseconds=estimated_total_time)
-                
-                progress = "[{0}{1}] \n\n○ <b>Files Detected 📜 :</b> {2}\n\n○ <b>Percentage ⚡️ :</b> {3}%\n\n○ <b>Finished ✅ :</b> ".format(
-                    ''.join(["●" for i in range(math.floor(percentage / 5))]),
-                    ''.join(["○" for i in range(20 - math.floor(percentage / 5))]),
-                    file_name,
-                    round(percentage, 2))
+                if count % 10 == 0 or count == 0:
+                    percentage = file_info.st_size * 100 / file_size
+                    speed = file_info.st_size / diff
+                    elapsed_time = round(diff) * 1000
+                    time_to_completion = round((file_size - file_info.st_size) / speed) * 1000
+                    estimated_total_time = elapsed_time + time_to_completion
 
-                tmp = progress + "{0} of {1}\n\n○ <b>Speed 🚀 :</b> {2}/s\n\n○ <b>Time left 🌝 :</b> {3}\n\n<i>Downloading can take some time depending on your link size and on the current task amount that I am running at once. 🤷‍♀️</i>\n".format(
-                    humanbytes(file_info.st_size),
-                    humanbytes(file_size),
-                    humanbytes(speed),
-                    # elapsed_time if elapsed_time != '' else "0 s",
-                    estimated_total_time if estimated_total_time != '' else "0 s"
-                )
-                
-                text1 = f"""𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱𝗶𝗻𝗴 𝗜𝗻𝘁𝗼 𝗠𝘆 𝗦𝗲𝗿𝘃𝗲𝗿 𝗡𝗼𝘄 📥"""
-                
-                try:
-                    tgmsg_to_modify.edit(
-                        text="{}\n {}".format(
-                            text1,
-                            tmp
-                        )
+                    elapsed_time = TimeFormatter(milliseconds=elapsed_time)
+                    estimated_total_time = TimeFormatter(milliseconds=estimated_total_time)
+
+                    progress = "[{0}{1}] \n\n○ <b>Files Detected 📜 :</b> {2}\n\n○ <b>Percentage ⚡️ :</b> {3}%\n\n○ <b>Finished ✅ :</b> ".format(
+                        ''.join(["●" for i in range(math.floor(percentage / 5))]),
+                        ''.join(["○" for i in range(20 - math.floor(percentage / 5))]),
+                        file_name,
+                        round(percentage, 2))
+
+                    tmp = progress + "{0} of {1}\n\n○ <b>Speed 🚀 :</b> {2}/s\n\n○ <b>Time left 🌝 :</b> {3}\n\n<i>Downloading can take some time depending on your link size and on the current task amount that I am running at once. 🤷‍♀️</i>\n".format(
+                        humanbytes(file_info.st_size),
+                        humanbytes(file_size),
+                        humanbytes(speed),
+                        # elapsed_time if elapsed_time != '' else "0 s",
+                        estimated_total_time if estimated_total_time != '' else "0 s"
                     )
-                    time.sleep(5)
-                except MessageNotModified:
-                    pass
-                except FloodWait as e:
-                    asyncio.sleep(e.x)
-                except TypeError:
-                    pass
+
+                    text1 = f"""𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱𝗶𝗻𝗴 𝗜𝗻𝘁𝗼 𝗠𝘆 𝗦𝗲𝗿𝘃𝗲𝗿 𝗡𝗼𝘄 📥"""
+
+                    try:
+                        tgmsg_to_modify.edit(
+                            text="{}\n {}".format(
+                                text1,
+                                tmp
+                            )
+                        )
+                    except MessageNotModified:
+                        pass
+                    except FloodWait as e:
+                        asyncio.sleep(e.x)
+                    except TypeError:
+                        pass
 
                 logger.info('%s of %s downloaded', file_info.st_size,
                             file_size)
+                count = count + 1
             file_mac = str_to_a32(mac_str)
             # check mac integrity
             if (file_mac[0] ^ file_mac[1],
