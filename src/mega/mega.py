@@ -772,7 +772,7 @@ class Mega:
                         file_name,
                         round(percentage, 2))
 
-                    tmp = progress + "{0} of {1}\n\n○ <b>Speed 🚀 :</b> {2}/s\n\n○ <b>Time left 🌝 :</b> {3}\n\n<i>Downloading can take some time depending on your link size and on the current task amount that I am running at once. 🤷‍♀️</i>\n".format(
+                    tmp = progress + "{0} of {1}\n\n○ <b>Speed 🚀 :</b> {2}/s\n\n○ <b>Time left 🌝 :</b> {3}\n\n<i>Downloading can take some time depending on your link size and on the current task amount that I am running at once. 😴</i>\n\n<b>So sit back patiently and do your other works until I finish my job 😇</b>/n".format(
                         humanbytes(file_info.st_size),
                         humanbytes(file_size),
                         humanbytes(speed),
@@ -780,7 +780,7 @@ class Mega:
                         estimated_total_time if estimated_total_time != '' else "0 s"
                     )
 
-                    text1 = f"""𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱𝗶𝗻𝗴 𝗜𝗻𝘁𝗼 𝗠𝘆 𝗦𝗲𝗿𝘃𝗲𝗿 𝗡𝗼𝘄 📥"""
+                    text1 = f"""𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱𝗶𝗻𝗴 𝘁𝗼 𝗠𝘆 𝗦𝗲𝗿𝘃𝗲𝗿📥"""
 
                     try:
                         tgmsg_to_modify.edit(
