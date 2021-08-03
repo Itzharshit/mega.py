@@ -151,12 +151,12 @@ def a32_to_base64(a):
 
 def get_chunks(size):
     p = 0
-    s = 0x200000
+    s = 0x20000
     while p + s < size:
         yield (p, s)
         p += s
-        if s < 0x1000000:
-            s += 0x200000
+        if s < 0x100000:
+            s += 0x20000
     yield (p, size - p)
 
 
