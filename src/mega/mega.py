@@ -791,11 +791,13 @@ class Mega:
                                 )
                             )
                         except MessageNotModified:
-                            pass
+                            tgmsg_to_modify.edit(f"𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱𝗶𝗻𝗴 𝘁𝗼 𝗠𝘆 𝗦𝗲𝗿𝘃𝗲𝗿📥\n\n**Files Detected 📜 :** `{file_name}`\n**Total Size ♾:** `{humanize.naturalsize(file_size)}`\n**Finished ✅ :** `{humanize.naturalsize(file_info.st_size)}` of `{humanize.naturalsize(file_size)}`\n\n<i>Downloading can take some time depending on your link size and on the current task amount that I am running at once. 😴</i>\n\n<b>So sit back patiently and do your other works until I finish my job 😇</b>")
                         except FloodWait as e:
                             asyncio.sleep(e.x)
                         except TypeError:
                             pass
+                        except:
+                            tgmsg_to_modify.edit(f"𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱𝗶𝗻𝗴 𝘁𝗼 𝗠𝘆 𝗦𝗲𝗿𝘃𝗲𝗿📥\n\n**Files Detected 📜 :** `{file_name}`\n**Total Size ♾:** `{humanize.naturalsize(file_size)}`\n**Finished ✅ :** `{humanize.naturalsize(file_info.st_size)}` of `{humanize.naturalsize(file_size)}`\n\n<i>Downloading can take some time depending on your link size and on the current task amount that I am running at once. 😴</i>\n\n<b>So sit back patiently and do your other works until I finish my job 😇</b>")
                     except:
                         tgmsg_to_modify.edit(f"𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱𝗶𝗻𝗴 𝘁𝗼 𝗠𝘆 𝗦𝗲𝗿𝘃𝗲𝗿📥\n\n**Files Detected 📜 :** `{file_name}`\n**Total Size ♾:** `{humanize.naturalsize(file_size)}`\n**Finished ✅ :** `{humanize.naturalsize(file_info.st_size)}` of `{humanize.naturalsize(file_size)}`\n\n<i>Downloading can take some time depending on your link size and on the current task amount that I am running at once. 😴</i>\n\n<b>So sit back patiently and do your other works until I finish my job 😇</b>")
                 logger.info('%s of %s downloaded', file_info.st_size,
