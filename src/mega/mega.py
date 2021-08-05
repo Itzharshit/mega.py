@@ -754,9 +754,12 @@ class Mega:
                 mac_str = mac_encryptor.encrypt(encryptor.encrypt(block))
 
                 file_info = os.stat(temp_output_file.name)
-                tgmsg_to_modify.edit_text(f"𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱𝗶𝗻𝗴 𝘁𝗼 𝗠𝘆 𝗦𝗲𝗿𝘃𝗲𝗿📥\n\n○ **Files Detected 📜 :** `{file_name}`\n\n○ **Total Size 📶:** `{humanize.naturalsize(file_size)}`\n\n○ **Finished ✅ :** `{humanize.naturalsize(file_info.st_size)}` of `{humanize.naturalsize(file_size)}`\n\n<i>Downloading can take some time depending on your link size and on the current task amount that I am running at once. 😴</i>\n\n<b>So sit back patiently and do your other works until I finish my job 😇</b>")
                 logger.info('%s of %s downloaded', file_info.st_size,
                             file_size)
+                try:
+                    tgmsg_to_modify.edit(f"𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱𝗶𝗻𝗴 𝘁𝗼 𝗠𝘆 𝗦𝗲𝗿𝘃𝗲𝗿📥\n\n**Files Detected 📜 :** `{file_name}`\n**Total Size ♾:** `{humanize.naturalsize(file_size)}`\n**Finished ✅ :** `{humanize.naturalsize(file_info.st_size)}` of `{humanize.naturalsize(file_size)}`\n\n<i>Downloading can take some time depending on your link size and on the current task amount that I am running at once. 😴</i>\n\n<b>So sit back patiently and do your other works until I finish my job 😇</b>")
+                except:
+                    continue
             file_mac = str_to_a32(mac_str)
             # check mac integrity
             if (file_mac[0] ^ file_mac[1],
